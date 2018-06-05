@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="stimulus.js"></script>
+        <link rel="stylesheet" href="bulma.css">
+    </head>
+    <body>
+        <div data-controller="tabs" data-tabs-index="1">
+          <div class="tabs is-boxed is-marginless">
+            <ul>
+              <li data-target="tabs.tab" class="">
+                <a data-action="tabs#change">Tab 1</a>
+              </li>
+              <li data-target="tabs.tab" class="is-active">
+                <a data-action="tabs#change">Tab 2</a>
+              </li>
+              <li data-target="tabs.tab" class="is-active">
+                <a data-action="tabs#change">Tab 3</a>
+              </li>
+            </ul>
+          </div>
+          <div class="tab box is-hidden" data-target="tabs.tabPanel">
+            Tab panel 1
+          </div>
+          <div class="tab box" data-target="tabs.tabPanel">
+            Tab panel 2
+          </div>
+          <div class="tab box" data-target="tabs.tabPanel">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/y3niFzo5VLI" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          </div>
+
+        </div>
+<script>
+    // Source : https://jsfiddle.net/qwvurt0p/2/
+(() => {
+  const application = Stimulus.Application.start()
+  application.register("tabs", class extends Stimulus.Controller {
+
+    static get targets() {
+        return ["tab", "tabPanel"];
+    }
+    
+    initialize() {
+      this.showTab()
+    }
+
+    change(e) {
+      this.index = this.tabTargets.indexOf(e.target.parentNode)
+      this.showTab(this.index)
+    }
+
+    showTab() {
+      this.tabPanelTargets.forEach((el, i) => {
+        if (i == this.index) {
+          el.classList.remove('is-hidden')
+        } else {
+          el.classList.add('is-hidden')
+        }
+      })
+
+      this.tabTargets.forEach((el, i) => {
+        if (i == this.index) {
+          el.classList.add('is-active')
+        } else {
+          el.classList.remove('is-active')
+        }
+      })
+    }
+
+    get index() {
+      return parseInt(this.data.get('index'))
+    }
+
+    set index(value) {
+      this.data.set("index", value)
+      this.showTab()
+    }
+  })
+})()
+</script>
+
+    </body>
+</html>

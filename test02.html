@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TODO supply a title</title>
+    <meta charset="UTF-8">
+    <script src="stimulus.js"></script>
+  <script>
+    (() => {
+      const application = Stimulus.Application.start()
+
+      application.register("hello", class extends Stimulus.Controller {
+        static get targets() {
+            return [ "name", "output"]
+        }
+
+        greet() {
+            this.outputTarget.textContent = `Hello, ${this.nameTarget.value}!`
+        }
+
+      })
+    })()
+  </script>
+</head>
+<body>
+  <div data-controller="hello">
+    <input data-target="hello.name" type="text">
+    <button data-action="click->hello#greet">Greet</button>
+    <div data-target="hello.output"></div>
+  </div>
+</body>
+</html>

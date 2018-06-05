@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TODO supply a title</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"
+	  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+	  crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/stimulus/dist/stimulus.umd.js"></script>
+    <!--<script src="stimulus.js"></script>-->
+  <script>
+      // exemple inspiré par : http://tomkadwill.com/2018/02/06/stimulus-js.html
+    (() => {
+      const application = Stimulus.Application.start()
+
+      application.register("hello", class extends Stimulus.Controller {
+        static get targets() {
+          return [ "name" ]
+        }
+        greet() {
+          const element = this.targets.find("name");
+          const name = element.value;
+
+          $("#myModal").modal('show');
+          $('h4.modal-title').text(`Hi ${name}`);
+        }
+      })
+    })()
+  </script>
+</head>
+<body>
+<div id="myModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <p>This is your greeting</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div data-controller="hello">
+  <input data-target="hello.name" type="text">
+  <button data-action="click->hello#greet">Greet</button>
+</div>
+    
+</body>
+</html>

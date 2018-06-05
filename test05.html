@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TODO supply a title</title>
+    <meta charset="UTF-8">
+    <script src="stimulus.js"></script>
+  <script>
+      // https://blog.supersetinc.com/2018/01/11/well-factored-javascript-server-rendered-applications-using-stimulus/
+    (() => {
+      const application = Stimulus.Application.start()
+
+      application.register("rating-widget", class extends Stimulus.Controller {
+        valueChanged() {
+          this.numberDisplay.textContent = this.innerBar.style.width = `${this.rating}%`;
+        }
+
+        get rating() {
+          return parseInt(this.slider.value);
+        }
+
+        get slider() {
+          return this.targets.find('slider');
+        }
+
+        get numberDisplay() {
+          return this.targets.find('numberDisplay');
+        }
+
+        get innerBar() {
+          return this.targets.find('innerBar'); 
+        }  
+      })
+    })()
+  </script>
+</head>
+<body>
+<div class='rating-widget' data-controller='rating-widget'>
+    <form>
+    <div class='number-display' data-target='rating-widget.numberDisplay'>
+        20%
+    </div>
+    
+    <div class='rating-bar'>
+        <input type="range" min="1" max="100" class="rating-slider" 
+               data-target="rating-widget.slider"
+               data-action="input->rating-widget#valueChanged" >
+      <div class='rating-bar-inner' data-target='rating-widget.innerBar' style="width: 20%;"></div>
+    </div>
+
+    <input type="submit" value="Save Rating" class="submit-rating" >      
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TODO supply a title</title>
+<meta charset="UTF-8">
+<script src="stimulus.js"></script>
+<script>
+(() => {
+    const application = Stimulus.Application.start();
+
+    application.register("hello", class extends Stimulus.Controller {
+       
+        greet() {
+           var data1 = this.targets.find("data1");
+           var data2 = this.targets.find("data2");
+           if (data1 && data2) {
+                data2.innerHTML = `Salut, ${data1.value}!`;
+           }
+        }       
+    });
+})();
+  </script>
+</head>
+<body>
+    <!--HTML from anywhere-->
+    <div data-controller="hello">
+        <input data-target="hello.data1" type="text">
+
+        <button data-action="click->hello#greet">
+          Greet
+        </button>
+
+        <span data-target="hello.data2">
+        </span>
+    </div>
+</body>
+</html>

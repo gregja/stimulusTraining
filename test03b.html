@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TODO supply a title</title>
+    <meta charset="UTF-8">
+    <script src="stimulus.js"></script>
+  <script>
+    (() => {
+      const application = Stimulus.Application.start()
+
+      application.register("hello", class extends Stimulus.Controller {
+        static get targets() {
+            return [ "origin", "target"]
+        }
+
+        get languages() {
+            return ['C', 'C++', 'Java', 'Javascript', 'Python', 'Ruby' ];
+        } 
+        
+        zap(evt) {
+            //console.log(evt.target.dataset.target);
+            evt.target.dataset['action']="click->hello#rezap" 
+            this.targetTarget.appendChild(evt.target);
+        }
+
+        rezap(evt) {
+            //console.log(evt.target.dataset.target);
+            evt.target.dataset['action']="click->hello#zap" 
+            this.originTarget.appendChild(evt.target);
+        }
+
+        connect() {
+            let languages = this.languages;
+            this.originTarget.innerHTML =  languages.map((lang) => { 
+                return `<li data-action="click->hello#zap" data-target="${lang}" >${lang}</li>` 
+            }).join('') 
+        }
+
+      })
+    })()
+  </script>
+</head>
+<body>
+  <div data-controller="hello">
+    <br>Liste 1
+    <ul data-target="hello.origin"></ul>
+    <br>Liste 2
+    <ul data-target="hello.target"></ul>
+  </div>
+</body>
+</html>

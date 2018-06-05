@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Manage a Form with StimulusJS</title>
+<meta charset="UTF-8">
+<script src="stimulus.js"></script>
+<script>
+(() => {
+    const application = Stimulus.Application.start();
+
+    application.register("testform", class extends Stimulus.Controller {
+
+        static get targets() {
+          return [ "data1", "data2", "data3a", "data3b", "data4a", "data4b",
+                    "data5", "data6", "data7"];
+        }
+
+        connect() {
+            this.reinit();
+        }
+        
+        submit(evt) {
+            evt.preventDefault();
+            if (!evt.currentTarget.checkValidity()) {
+                alert('formulaire incomplet');
+            }
+            
+            var datas = {};
+            // input field
+            datas.data1 = this.data1Target.value;
+            // select field (mono option)
+            datas.data2 = this.data2Target.value;
+            // checkbox (2 choices)
+            datas.data3 = [];
+            if (this.data3aTarget.checked) {
+                datas.data3.push(this.data3aTarget.value);
+            }
+            if (this.data3bTarget.checked) {
+                datas.data3.push(this.data3bTarget.value);
+            }
+            datas.data3 = datas.data3.join('|');
+            // radio buttons (1 choice)
+            datas.data4 = this.data4aTarget.checked ? this.data4aTarget.value:
+                    this.data4bTarget.value;
+            // textaera field
+            datas.data5 = this.data5Target.value;
+            // select field (multiple options)
+            datas.data6 = [];
+            for (let o=0, omax=this.data6Target.options.length; o<omax; o++) {
+                if (this.data6Target.options[o].selected === true) {
+                    datas.data6.push(this.data6Target.options[o].value);
+                }
+            }
+            datas.data6 = datas.data6.join('|');
+            // tip to retrieve the values of the field more easily (if needeed)
+            this.data6Target.dataset['values'] = datas.data6;
+            // value of the slider
+            datas.data7 = this.data7Target.value + ' % ';
+
+this.targetlist(datas); 
+            
+        }
+        targetlist(datas) {
+            //var target = this.application.getControllerForElementAndIdentifier(this.element, "testform.listeform");
+            //console.log(target);
+            // prepare the final list for output
+            var dataliste = document.querySelector('[data-target="listeform.dataliste"]');
+            dataliste.textContent = '';
+            for (let data in datas) {
+                let li = document.createElement('li');
+                li.innerHTML = data + ' => ' + datas[data] ;
+                dataliste.appendChild(li);
+            }
+        }
+        reinit () {
+            this.data1Target.value = 'StimulusJS';
+            this.data2Target.value = 'uk';
+            this.data3aTarget.checked = true;
+            this.data3bTarget.checked = true;
+            this.data4aTarget.checked = true;
+            this.data4bTarget.checked = false;
+            this.data5Target.value = 'Stimulus is cool';
+            for (let o=0, omax=this.data6Target.options.length; o<omax; o++) {
+                if (this.data6Target.options[o].value === 'js') {
+                    this.data6Target.options[o].selected = true ;
+                } else {
+                    this.data6Target.options[o].selected = false ;
+                }                
+            }
+            this.data6Target.dataset['values'] = 'js';
+            this.data7Target.value = '50';
+        }
+        alert7(evt) {
+            alert(evt.target.value);
+        }
+    });
+    application.register("listeform", class extends Stimulus.Controller {
+
+        static get targets() {
+          return [ "dataliste"];
+        }
+        
+        alerte() {
+            alert('liste modifiée');
+        }
+    });
+
+})();
+  </script>
+</head>
+<body>
+    <div>
+        <form data-action="submit->testform#submit" 
+              data-controller="testform" novalidate >
+            <label>Data 1 
+            <input name="data1" data-target="testform.data1" type="text"
+                   required >
+            </label><br><br>
+            <label>Data 2
+                <select name="data2" data-target="testform.data2"> 
+                    <option value="fr">France</option>
+                    <option value="uk">Grande Bretagne</option>
+                    <option value="de">Allemagne</option>
+                    <option value="it">Italie</option>
+                </select>            
+            </label><br><br>
+            <label>Data 3 (checkbox)</label>
+            <label>Good
+                <input name="data3[]" type="checkbox" value="GOOD"
+                       data-target="testform.data3a"></label>
+            <label>Bad
+                <input name="data3[]" type="checkbox" value="BAD"
+                       data-target="testform.data3b">
+            </label><br><br>
+            <label>Data 4 (radio)</label>
+            <label>Good
+                <input name="data4" type="radio" value="GOOD"
+                       data-target="testform.data4a"></label>
+            <label>Bad
+                <input name="data4" type="radio" value="BAD"
+                       data-target="testform.data4b">
+            </label><br><br>
+            <label>Data 5
+            <textarea name="data5" data-target="testform.data5" rows="1"></textarea>
+            </label><br><br>
+            <label>Data 6
+                <select name="data6" data-target="testform.data6" multiple > 
+                    <option value="js">Javascript</option>
+                    <option value="java">Java</option>
+                    <option value="php">PHP</option>
+                    <option value="c++">C++</option>
+                </select>            
+            </label><br><br>
+            <label>Data 7
+                <input type="range" min="1" max="100" value="50" class="slider" 
+                        name="data7" data-target="testform.data7"
+                        data-action="change->testform#alert7">
+            </label>
+            <input type="submit" value="Valider">
+            <button data-action="testform#reinit">Initialiser</button>
+
+        </form>
+        <br>
+  </div>
+    <div data-controller="listeform" >
+        <ul data-target="listeform.dataliste"
+            data-action="change->listeform#alerte"></ul>
+    </div>
+
+</body>
+</html>

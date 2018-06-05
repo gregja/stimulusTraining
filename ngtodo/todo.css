@@ -1,0 +1,8 @@
+
+[data-done="true"] {
+  text-decoration: line-through;
+  color: grey;
+}
+li {
+    list-style-type: none;
+}

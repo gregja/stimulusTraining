@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Exemple conversion AngularJS -> Stimulus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../stimulus.js"></script> 
+    <script src="todo.js"></script>
+<!--    <link rel="stylesheet" href="todo.css">-->
+    <style>
+        [data-done="true"] {
+            text-decoration: line-through;
+            color: grey;
+          }
+          li {
+              list-style-type: none;
+          }
+    </style>
+  </head>
+  <body>
+    <h2>Adaptation pour Stimulus d'une TodoList développée initialement pour AngularJS</h2>
+    <div data-controller="todoList">
+        <div>Remaining : <span data-target="todoList.remaining"></span> / 
+            <span data-target="todoList.todolength"></span></div>
+      [ <a href="" data-action="todoList#archive">archive</a> ]
+      <ul class="unstyled" data-target="todoList.dataList">
+          <li data-done="true">Learn StimulusJS</li>
+          <li data-done="false">Build a StimulusJS app</li>
+      </ul>
+      <form data-action="submit->todoList#addTodo">
+        <input type="text" data-target="todoList.todoText" size="30"
+               placeholder="add new todo here" >
+        <input type="submit" class="btn-primary" value="Add Todo" />
+      </form>
+    </div>
+  </body>
+</html>
+

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TODO supply a title</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="bulma.css" />
+    <script src="stimulus.js"></script>
+  <script>
+    (() => {
+      const application = Stimulus.Application.start()
+
+      application.register("tabs", class extends Stimulus.Controller {
+        static get targets() {
+            return [ "tab", "panel" ]
+        }
+   
+        initialize() {
+          this.showTab()
+        }
+
+        change(event) {
+          this.index = this.tabTargets.indexOf(event.currentTarget)
+        }
+
+        showTab() {      
+          this.tabTargets.forEach((tab, index) => {
+            const panel = this.panelTargets[index]
+            tab.classList.toggle("is-active", index == this.index)
+            panel.classList.toggle("is-hidden", index != this.index)
+          })
+        }
+
+        get index() {
+          return parseInt(this.data.get("index") || 0)
+        }
+
+        set index(value) {
+          this.data.set("index", value)
+          this.showTab()
+        }
+      })
+    })()
+  </script>
+</head>
+<body>
+<div data-controller="tabs">
+  <div class="tabs is-boxed is-marginless">
+    <ul>
+      <li data-target="tabs.tab" data-action="click->tabs#change">
+        <a>Tab 1</a>
+      </li>
+      <li data-target="tabs.tab" data-action="click->tabs#change">
+        <a>Tab 2</a>
+      </li>
+      <li data-target="tabs.tab" data-action="click->tabs#change">
+        <a>Tab 3</a>
+      </li>
+    </ul>
+  </div>
+  
+  <div class="tab box is-hidden" data-target="tabs.panel">
+    Tab panel 1
+  </div>
+  
+  <div class="tab box is-hidden" data-target="tabs.panel">
+    Tab panel 2
+  </div>
+  
+  <div class="tab box is-hidden" data-target="tabs.panel">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/y3niFzo5VLI" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </div>
+</div>
+
+</body>
+</html>
